@@ -8,7 +8,8 @@
     "express": "nodemon build/app.js",
     "express:delayed": "run-s sleep express",
     "build:watch": "tsc --watch",
-    "start": "run-p express:delayed build:watch"
+    "start-dev": "run-p express:delayed build:watch",
+    "start": "node build/app.js"
   },
   "author": "Luke Brown (worbunkel@gmail.com)",
   "license": "ISC",
