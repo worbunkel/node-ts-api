@@ -9,7 +9,7 @@
     "express:delayed": "run-s sleep express",
     "build:watch": "tsc --watch",
     "start": "run-p express:delayed build:watch",
-    "start:prod": "node build/app.js"
+    "start:prod": "tsc && node build/app.js"
   },
   "author": "Luke Brown (worbunkel@gmail.com)",
   "license": "ISC",
