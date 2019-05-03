@@ -20,10 +20,10 @@ const app: express.Application = express();
 })();
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('Healthy!');
 });
 
 const port = 8080;
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}!`);
+  console.log(`App listening on port ${port}!`);
 });
