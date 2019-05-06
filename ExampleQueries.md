@@ -1,6 +1,6 @@
 All Queries
 
-```
+```graphql
 {
   associates {
     id
@@ -97,19 +97,21 @@ All Queries
 
 All Mutations Except Removals
 
-```
+```graphql
 mutation {
-  addPatient(newPatientData: {
-    firstName: "Test",
-		lastName: "User",
-		email: "test.user@gmail.com",
-		insurancePlanId: "test-insurance-plan",
-		storeId: "test-store"
-  }){
+  addPatient(
+    newPatientData: {
+      firstName: "Test"
+      lastName: "User"
+      email: "test.user@gmail.com"
+      insurancePlanId: "test-insurance-plan"
+      storeId: "test-store"
+    }
+  ) {
     id
-		storeId
+    storeId
     visualGuideId
-		doctorId
+    doctorId
     insurancePlanId
     firstName
     lastName
@@ -120,52 +122,34 @@ mutation {
   }
   advancePatientStage(patientId: "test-patient")
   revertPatientStage(patientId: "test-patient")
-  addAssociate(newAssociateData: {
-    firstName: "New",
-		lastName: "Associate",
-		storeId: "test-store",
-		role: "Doctor"
-  }){
+  addAssociate(newAssociateData: { firstName: "New", lastName: "Associate", storeId: "test-store", role: "Doctor" }) {
     id
     storeId
     firstName
     lastName
     role
   }
-  addInsurancePlan(newInsurancePlanData: {
-    provider: "Fakeins Co",
-    deductible: 100
-  }){
+  addInsurancePlan(newInsurancePlanData: { provider: "Fakeins Co", deductible: 100 }) {
     id
     provider
     deductible
   }
-  addBenefit(newBenefitData:{
-    insurancePlanId: "test-insurance-plan",
-    type: "Ultraviolet Protection",
-    copay: 50
-  }){
+  addBenefit(newBenefitData: { insurancePlanId: "test-insurance-plan", type: "Ultraviolet Protection", copay: 50 }) {
     id
     insurancePlanId
     type
     copay
     limit
   }
-  addPatientChoice(newPatientChoiceData: {
-    patientId: "test-patient",
-    benefitType: "Ultraviolet Protection",
-    cost: 85
-  }){
+  addPatientChoice(
+    newPatientChoiceData: { patientId: "test-patient", benefitType: "Ultraviolet Protection", cost: 85 }
+  ) {
     id
-  	patientId
+    patientId
     benefitType
     cost
   }
-  addPatientResult(newPatientResultData: {
-    patientId: "test-patient",
-    examType: "Eye Chart",
-    result: "20/70",
-  }){
+  addPatientResult(newPatientResultData: { patientId: "test-patient", examType: "Eye Chart", result: "20/70" }) {
     id
     patientId
     examType
@@ -176,7 +160,7 @@ mutation {
 
 All Removal Mutations
 
-```
+```graphql
 mutation {
   removeAssociate(associateId: "test-doctor")
   removeInsurancePlan(insurancePlanId: "test-insurance-plan")
