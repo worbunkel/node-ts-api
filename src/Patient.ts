@@ -40,6 +40,18 @@ class Patient {
   id: string;
 
   @Field()
+  storeId: string;
+
+  @Field()
+  visualGuideId: string;
+
+  @Field()
+  doctorId: string;
+
+  @Field()
+  insurancePlanId: string;
+
+  @Field()
   firstName: string;
 
   @Field()
@@ -49,24 +61,39 @@ class Patient {
   email: string;
 
   @Field()
-  insurance: string;
+  checkInTimeISO: string;
 
   @Field()
   stage: PatientStage;
+
+  @Field()
+  stageMoveTimestampsJson: string;
 }
 
 let patients: Patient[] = [
   {
-    id: uuid(),
+    id: 'test-patient',
     firstName: 'Luke',
     lastName: 'Brown',
     email: 'luke@revunit.com',
-    insurance: 'Test Insurance Co',
+    insurancePlanId: 'test',
     stage: PatientStage.EXAM,
+    checkInTimeISO: new Date().toISOString(),
+    doctorId: 'test-doctor',
+    stageMoveTimestampsJson: JSON.stringify([]),
+    storeId: 'test-store',
+    visualGuideId: 'test-vg',
   },
 ];
 
-const getAllPatients = async (): Promise<Patient[]> => patients;
+export const getAllPatients = async (): Promise<Patient[]> => patients;
+
+export const getAllPatientsByStore = async (storeId: string): Promise<Patient[]> => _.filter(patients, { storeId });
+
+export const getAllPatientsByVisualGuide = async (visualGuideId: string): Promise<Patient[]> =>
+  _.filter(patients, { visualGuideId });
+
+export const getAllPatientsByDoctor = async (doctorId: string): Promise<Patient[]> => _.filter(patients, { doctorId });
 
 @InputType()
 class NewPatientInput {
@@ -80,24 +107,46 @@ class NewPatientInput {
   email: string;
 
   @Field()
-  insurance: string;
+  insurancePlanId: string;
+
+  @Field()
+  storeId: string;
 }
 
 @Resolver(Patient)
 export class PatientResolver {
   @Query(returns => [Patient])
   async patients() {
-    const patients = await getAllPatients();
+    return await getAllPatients();
+  }
 
-    return patients;
+  @Query(returns => [Patient])
+  async patientsByStore(@Arg('storeId') storeId: string) {
+    return await getAllPatientsByStore(storeId);
+  }
+
+  @Query(returns => [Patient])
+  async patientsByVisualGuide(@Arg('visualGuideId') visualGuideId: string) {
+    return await getAllPatientsByVisualGuide(visualGuideId);
+  }
+
+  @Query(returns => [Patient])
+  async patientsByDoctor(@Arg('doctorId') doctorId: string) {
+    return await getAllPatientsByDoctor(doctorId);
   }
 
   @Mutation(returns => Patient)
   async addPatient(@Arg('newPatientData') newPatientData: NewPatientInput): Promise<Patient> {
-    const newPatient = {
+    // TODO: Assign doctor
+    // TODO: Assign visual guide
+    const newPatient: Patient = {
       ...newPatientData,
       id: uuid(),
       stage: PatientStage.WAITING,
+      checkInTimeISO: new Date().toISOString(),
+      doctorId: 'test-doctor',
+      stageMoveTimestampsJson: JSON.stringify([]),
+      visualGuideId: 'test-vg',
     };
     patients.push(newPatient);
 
