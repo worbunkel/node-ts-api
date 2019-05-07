@@ -1,6 +1,7 @@
 import { ObjectType, Field, Resolver, Query, InputType, Mutation, Arg } from 'type-graphql';
 import uuid from 'uuid/v4';
 import * as _ from 'lodash';
+import { Patient, updatePatient } from './Patient';
 
 export enum AssociateRole {
   DOCTOR = 'Doctor',
@@ -25,6 +26,9 @@ class Associate {
 
   @Field()
   role: AssociateRole;
+
+  @Field()
+  patientsJson?: string;
 }
 
 let associates: Associate[] = [
@@ -34,6 +38,7 @@ let associates: Associate[] = [
     firstName: 'Vizzie',
     lastName: 'Guiderro',
     role: AssociateRole.VISUAL_GUIDE,
+    patientsJson: JSON.stringify(['test-patient']),
   },
   {
     id: 'test-doctor',
@@ -41,6 +46,7 @@ let associates: Associate[] = [
     firstName: 'Doc',
     lastName: 'Eyefixer',
     role: AssociateRole.DOCTOR,
+    patientsJson: JSON.stringify(['test-patient']),
   },
   {
     id: 'test-ceo',
@@ -48,13 +54,51 @@ let associates: Associate[] = [
     firstName: 'Keo',
     lastName: 'Newreeves',
     role: AssociateRole.CHIEF_EXPERIENCE_OFFICER,
+    patientsJson: JSON.stringify([]),
   },
 ];
 
-export const getAllAssociates = async (): Promise<Associate[]> => associates;
+export const getAllAssociates = async () => associates;
 
-export const getAllAssociatesForStore = async (storeId: string): Promise<Associate[]> =>
-  _.filter(associates, { storeId });
+export const getAllAssociatesForStore = async (storeId: string) => _.filter(associates, { storeId });
+
+export const getAllAssociatesWithRoleForStore = async (role: AssociateRole, storeId: string) =>
+  _.filter(associates, { role, storeId });
+
+const addPatientToAssociate = async (associateId: string, patientId: string) => {
+  const associate = _.find(associates, { id: associateId });
+  if (associate) {
+    const oldPatients = JSON.parse(associate.patientsJson);
+    const newPatients = [...oldPatients, patientId];
+    associate.patientsJson = JSON.stringify(newPatients);
+  }
+};
+
+const removePatientFromAssociate = async (associateId: string, patientId: string) => {
+  const associate = _.find(associates, { id: associateId });
+  if (associate) {
+    const oldPatients = JSON.parse(associate.patientsJson);
+    const newPatients = _.without(oldPatients, patientId);
+    associate.patientsJson = JSON.stringify(newPatients);
+  }
+};
+
+const countAssociatePatients = (associate: Associate) => _.size(JSON.parse(associate.patientsJson));
+
+export const assignAssociateToPatient = async (patientId: string, associateRole: AssociateRole, storeId: string) => {
+  const associatesWithRoleInStore = await getAllAssociatesWithRoleForStore(associateRole, storeId);
+  const associateWithFewestPatients = _.minBy(associatesWithRoleInStore, countAssociatePatients);
+  if (associateWithFewestPatients) {
+    addPatientToAssociate(associateWithFewestPatients.id, patientId);
+    return associateWithFewestPatients.id;
+  }
+  return null;
+};
+
+export const unassignAssociateFromPatient = async (patient: Patient, associateId: string) => {
+  removePatientFromAssociate(associateId, patient.id);
+  return null;
+};
 
 @InputType()
 class NewAssociateInput {
@@ -88,6 +132,7 @@ export class AssociateResolver {
     const newAssociate = {
       ...newAssociateData,
       id: uuid(),
+      patientsJson: JSON.stringify([]),
     };
     associates.push(newAssociate);
 
@@ -96,8 +141,25 @@ export class AssociateResolver {
 
   @Mutation(returns => Boolean)
   async removeAssociate(@Arg('associateId') associateId: string) {
-    // TODO: Update to reassign VGs to any patients who are associated with this VG
-    associates = _.filter(associates, associate => associate.id !== associateId);
+    const associate = _.find(associates, { id: associateId });
+    associates = _.reject(associates, { id: associateId });
+    if (associate) {
+      const patientIds: string[] = JSON.parse(associate.patientsJson);
+      if (_.includes([AssociateRole.VISUAL_GUIDE, AssociateRole.DOCTOR], associate.role)) {
+        const newIdPromises = _.map(patientIds, patientId =>
+          assignAssociateToPatient(patientId, associate.role, associate.storeId),
+        );
+        const newIds = await Promise.all(newIdPromises);
+        const patientAssociates = _.zip(patientIds, newIds);
+        const updatedPatientPromises = _.map(patientAssociates, ([patientId, newId]) =>
+          updatePatient(
+            patientId,
+            associate.role === AssociateRole.DOCTOR ? { doctorId: newId } : { visualGuideId: newId },
+          ),
+        );
+        await Promise.all(updatedPatientPromises);
+      }
+    }
 
     return true;
   }

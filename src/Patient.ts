@@ -1,52 +1,88 @@
 import { ObjectType, Field, Resolver, Query, InputType, Mutation, Arg } from 'type-graphql';
 import uuid from 'uuid/v4';
 import * as _ from 'lodash';
+import { assignAssociateToPatient, AssociateRole, unassignAssociateFromPatient } from './Associate';
 
 enum PatientStage {
-  WAITING = 'WAITING',
-  EXAM = 'EXAM',
-  CHOOSING_FRAMES = 'CHOOSING_FRAMES',
+  SCHEDULED = 'Scheduled',
+  WAITING = 'Waiting',
+  EXAM = 'Exam',
+  CHOOSING_FRAMES = 'Choosing Frames',
 }
 
-const advanceStage = (patient: Patient) => {
+const advanceStage = async (patient: Patient) => {
+  const updatedPatient = _.cloneDeep(patient);
   const stages = _.keys(PatientStage);
   const stageIndex = _.findIndex(stages, stage => _.isEqual(PatientStage[stage], patient.stage));
   if (stageIndex !== -1 && stageIndex < _.size(stages) - 1) {
+    if (!patient.doctorId) {
+      updatedPatient.doctorId = await assignAssociateToPatient(patient.id, AssociateRole.DOCTOR, patient.storeId);
+    }
+    if (!patient.visualGuideId) {
+      updatedPatient.visualGuideId = await assignAssociateToPatient(
+        patient.id,
+        AssociateRole.VISUAL_GUIDE,
+        patient.storeId,
+      );
+    }
     const newStage = PatientStage[stages[stageIndex + 1]];
+    const oldStageMoveTimestamps = JSON.parse(patient.stageMoveTimestampsJson);
+    const stageMoveTimestamps = _.uniqBy(
+      [
+        {
+          time: new Date().toISOString(),
+          stage: PatientStage[stages[stageIndex]],
+        },
+        ...oldStageMoveTimestamps,
+      ],
+      'stage',
+    );
     return {
-      ...patient,
+      ...updatedPatient,
       stage: newStage,
+      stageMoveTimestampsJson: JSON.stringify(stageMoveTimestamps),
     };
   }
   return null;
 };
 
-const revertStage = (patient: Patient) => {
+const revertStage = async (patient: Patient) => {
+  const updatedPatient = _.cloneDeep(patient);
   const stages = _.keys(PatientStage);
   const stageIndex = _.findIndex(stages, stage => _.isEqual(PatientStage[stage], patient.stage));
   if (stageIndex > 0) {
+    const oldStage = PatientStage[stages[stageIndex]];
+    if (oldStage === PatientStage.WAITING) {
+      unassignAssociateFromPatient(patient, patient.doctorId);
+      unassignAssociateFromPatient(patient, patient.visualGuideId);
+      updatedPatient.doctorId = null;
+      updatedPatient.visualGuideId = null;
+    }
     const newStage = PatientStage[stages[stageIndex - 1]];
+    const oldStageMoveTimestamps = JSON.parse(patient.stageMoveTimestampsJson);
+    const stageMoveTimestamps = _.reject(oldStageMoveTimestamps, { stage: PatientStage[stages[stageIndex - 1]] });
     return {
-      ...patient,
+      ...updatedPatient,
       stage: newStage,
+      stageMoveTimestampsJson: JSON.stringify(stageMoveTimestamps),
     };
   }
   return patient;
 };
 
 @ObjectType()
-class Patient {
+export class Patient {
   @Field()
   id: string;
 
   @Field()
   storeId: string;
 
-  @Field()
-  visualGuideId: string;
+  @Field({ nullable: true })
+  visualGuideId?: string;
 
-  @Field()
-  doctorId: string;
+  @Field({ nullable: true })
+  doctorId?: string;
 
   @Field()
   insurancePlanId: string;
@@ -95,6 +131,15 @@ export const getAllPatientsByVisualGuide = async (visualGuideId: string): Promis
 
 export const getAllPatientsByDoctor = async (doctorId: string): Promise<Patient[]> => _.filter(patients, { doctorId });
 
+export const updatePatient = async (patientId: string, newProperties: Partial<Patient>) => {
+  const patient = _.find(patients, { id: patientId });
+  if (patient) {
+    _.each(newProperties, (value, key) => {
+      _.set(patient, key, value);
+    });
+  }
+};
+
 @InputType()
 class NewPatientInput {
   @Field()
@@ -137,16 +182,14 @@ export class PatientResolver {
 
   @Mutation(returns => Patient)
   async addPatient(@Arg('newPatientData') newPatientData: NewPatientInput): Promise<Patient> {
-    // TODO: Assign doctor
-    // TODO: Assign visual guide
+    const newPatientId = uuid();
+
     const newPatient: Patient = {
       ...newPatientData,
-      id: uuid(),
+      id: newPatientId,
       stage: PatientStage.WAITING,
       checkInTimeISO: new Date().toISOString(),
-      doctorId: 'test-doctor',
       stageMoveTimestampsJson: JSON.stringify([]),
-      visualGuideId: 'test-vg',
     };
     patients.push(newPatient);
 
@@ -157,7 +200,7 @@ export class PatientResolver {
   async advancePatientStage(@Arg('patientId') patientId: string): Promise<boolean> {
     const patient = _.find(patients, { id: patientId });
     if (patient) {
-      const newPatient = advanceStage(patient);
+      const newPatient = await advanceStage(patient);
       patients = _.compact(_.concat(_.without(patients, patient), newPatient));
       return true;
     }
@@ -169,7 +212,7 @@ export class PatientResolver {
   async revertPatientStage(@Arg('patientId') patientId: string): Promise<boolean> {
     const patient = _.find(patients, { id: patientId });
     if (patient) {
-      const newPatient = revertStage(patient);
+      const newPatient = await revertStage(patient);
       patients = _.concat(_.without(patients, patient), newPatient);
       return true;
     }
