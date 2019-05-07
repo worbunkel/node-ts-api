@@ -129,14 +129,22 @@ export class AssociateResolver {
 
   @Mutation(returns => Associate)
   async addAssociate(@Arg('newAssociateData') newAssociateData: NewAssociateInput): Promise<Associate> {
-    const newAssociate = {
-      ...newAssociateData,
-      id: uuid(),
-      patientsJson: JSON.stringify([]),
-    };
-    associates.push(newAssociate);
+    const foundAssociate = _.find(associates, {
+      firstName: newAssociateData.firstName,
+      lastName: newAssociateData.lastName,
+    });
+    if (!foundAssociate) {
+      const newAssociate = {
+        ...newAssociateData,
+        id: uuid(),
+        patientsJson: JSON.stringify([]),
+      };
+      associates.push(newAssociate);
 
-    return newAssociate;
+      return newAssociate;
+    }
+
+    return foundAssociate;
   }
 
   @Mutation(returns => Boolean)
