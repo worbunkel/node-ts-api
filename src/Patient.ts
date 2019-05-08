@@ -113,7 +113,7 @@ let patients: Patient[] = [
     lastName: 'Brown',
     email: 'luke@revunit.com',
     insurancePlanId: 'test',
-    stage: PatientStage.EXAM,
+    stage: PatientStage.SCHEDULED,
     checkInTimeISO: new Date().toISOString(),
     doctorId: 'test-doctor',
     stageMoveTimestampsJson: JSON.stringify([]),
@@ -187,7 +187,7 @@ export class PatientResolver {
     const newPatient: Patient = {
       ...newPatientData,
       id: newPatientId,
-      stage: PatientStage.WAITING,
+      stage: PatientStage.SCHEDULED,
       checkInTimeISO: new Date().toISOString(),
       stageMoveTimestampsJson: JSON.stringify([]),
     };

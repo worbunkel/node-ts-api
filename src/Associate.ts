@@ -28,7 +28,7 @@ class Associate {
   role: AssociateRole;
 
   @Field()
-  patientsJson?: string;
+  patientsJson: string;
 }
 
 let associates: Associate[] = [
