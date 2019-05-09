@@ -6,6 +6,8 @@ import { assignAssociateToPatient, AssociateRole, unassignAssociateFromPatient }
 enum PatientStage {
   SCHEDULED = 'Scheduled',
   WAITING = 'Waiting',
+  CHOOSING_EXAM_TYPE = 'Choosing Exam Type',
+  EYE_CHART = 'Eye Chart',
   EXAM = 'Exam',
   CHOOSING_FRAMES = 'Choosing Frames',
 }
@@ -112,7 +114,7 @@ let patients: Patient[] = [
     firstName: 'Luke',
     lastName: 'Brown',
     email: 'luke@revunit.com',
-    insurancePlanId: 'test',
+    insurancePlanId: 'davis-vision-standard',
     stage: PatientStage.SCHEDULED,
     checkInTimeISO: new Date().toISOString(),
     doctorId: 'test-doctor',

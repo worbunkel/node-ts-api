@@ -1,17 +1,32 @@
 import { ObjectType, Field, Resolver, Query, InputType, Mutation, Arg } from 'type-graphql';
 import uuid from 'uuid/v4';
 import * as _ from 'lodash';
+import { readFileSync } from 'fs';
 
 export enum BenefitType {
-  EXAM = 'Exam',
-  FRAMES_AND_LENSES = 'Frames and lenses',
-  ANTI_REFLECTIVE_LENS_COATING = 'Anti-reflective lens coating',
-  PHOTOCHROMIC_LENSES = 'Photochromic lenses',
-  POLYCARBONATE_LENSES = 'Polycarbonate lenses',
-  SCRATCH_RESISTANT_LENS_COATING = 'Scratch-resistant lens coating',
-  ULTRAVIOLET_PROTECTION = 'Ultraviolet protection',
-  PROGRESSIVE_LENSES = 'Progressive lenses',
-  BLENDED_BIFOCAL_LENSES = 'Blended bifocal lenses',
+  EYE_EXAMINATION = 'Eye Examination',
+  SPECTACLE_LENSES = 'Spectacle Lenses',
+  FRAMES = 'Frames',
+  SINGLE_VISION_LENSES = 'Single Vision Lenses',
+  LINED_BIFOCAL_LENSES = 'Lined Bifocal Lenses',
+  TRIFOCAL_LENSES = 'Trifocal Lenses',
+  GRADIENT_TINT = 'Gradient Tint',
+  SOLID_TINT = 'Solid Tint',
+  SCRATCH_RESISTANT_COATING = 'Scratch-Resistant Coating',
+  POLYCARBONATE_LENSES = 'Polycarbonate Lenses',
+  ULTRAVIOLET_COATING = 'Ultraviolet Coating',
+  INTERMEDIATE_VISION_LENSES = 'Intermediate-Vision Lenses',
+  STANDARD_ANTI_REFLECTIVE_COATING = 'Standard Anti-Reflective Coating',
+  PREMIUM_ANTI_REFLECTIVE_COATING = 'Premium Anti-Reflective Coating',
+  ULTRA_ANTI_REFLECTIVE_COATING = 'Ultra Anti-Reflective Coating',
+  STANDARD_PROGRESSIVE_LENSES = 'Standard Progressive Lenses',
+  PREMIUM_PROGRESSIVES_LENSES = 'Premium Progressives Lenses',
+  ULTRA_PROGRESSIVES_LENSES = 'Ultra Progressives Lenses',
+  HIGH_INDEX_LENSES = 'High-Index Lenses',
+  POLARIZED_LENSES = 'Polarized Lenses',
+  PLASTIC_PHOTOSENSITIVE_LENSES = 'Plastic Photosensitive Lenses',
+  SCRATCH_PROTECTION_PLAN_SINGLE_VISION = 'Scratch Protection Plan (Single Vision)',
+  SCRATCH_PROTECTION_PLAN_MULTIFOCAL = 'Scratch Protection Plan (Multifocal)',
 }
 
 @ObjectType()
@@ -32,21 +47,36 @@ class Benefit {
   limit?: number;
 }
 
-let benefits: Benefit[] = [
-  {
-    id: 'test-benefit',
-    insurancePlanId: 'test-insurance-plan',
-    type: BenefitType.EXAM,
-    copay: 10,
-  },
-  {
-    id: 'test-benefit-2',
-    insurancePlanId: 'test-insurance-plan',
-    type: BenefitType.FRAMES_AND_LENSES,
-    copay: 25,
-    limit: 150,
-  },
-];
+const importBenefitsFromCSV = () => {
+  const benefitsCSVPath = 'InsurancePlans.csv';
+  const fileContents = readFileSync(benefitsCSVPath, 'utf-8');
+  const fileContentsWithoutReturns = _.replace(fileContents, /\r/g, '');
+  const [headers, ...lines] = _.split(fileContentsWithoutReturns, '\n');
+  const splitHeaders = _.split(headers, ',');
+  const headersWithCopay = _.filter(splitHeaders, header => _.includes(header, 'copay'));
+  const insurancePlanIds = _.map(headersWithCopay, header => _.first(_.split(header, ' ')));
+  return _.reduce(
+    lines,
+    (benefits, line, index) => {
+      const splitLine = _.map(_.split(line, ','), word => _.replace(word, /\r/g, ''));
+      const newObj = _.zipObject(splitHeaders, splitLine);
+      const newBenefits = _.map(insurancePlanIds, insurancePlanId => ({
+        type: BenefitType[newObj.type],
+        id: `${insurancePlanId}-${index + 1}`,
+        insurancePlanId,
+        copay: parseInt(newObj[`${insurancePlanId} copay`]),
+        limit: _.includes(newObj[`${insurancePlanId} limit`], 'null')
+          ? null
+          : parseInt(newObj[`${insurancePlanId} limit`]),
+      }));
+
+      return _.concat(benefits, newBenefits);
+    },
+    [] as Benefit[],
+  );
+};
+
+let benefits: Benefit[] = importBenefitsFromCSV();
 
 export const getAllBenefitsForInsurancePlan = async (insurancePlanId: string): Promise<Benefit[]> =>
   _.filter(benefits, { insurancePlanId });

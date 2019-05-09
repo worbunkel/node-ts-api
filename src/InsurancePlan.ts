@@ -16,8 +16,14 @@ class InsurancePlan {
 
 let insurancePlans: InsurancePlan[] = [
   {
-    id: 'test-insurance-plan',
-    provider: 'Fake Insurance Co',
+    id: 'davis-vision-standard',
+    provider: 'Davis Vision',
+    deductible: 0,
+  },
+  {
+    id: 'davis-vision-premium',
+    provider: 'Davis Vision',
+    deductible: 0,
   },
 ];
 

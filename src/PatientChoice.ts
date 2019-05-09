@@ -22,7 +22,7 @@ let patientChoices: PatientChoice[] = [
   {
     id: 'test-patient-choice',
     patientId: 'test-patient',
-    benefitType: BenefitType.EXAM,
+    benefitType: BenefitType.EYE_EXAMINATION,
     cost: 40,
   },
 ];
