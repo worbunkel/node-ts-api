@@ -11,6 +11,7 @@ enum PatientStage {
   RETINAL_SCAN = 'Retinal Scan',
   EXAM = 'Exam',
   CHOOSING_FRAMES = 'Choosing Frames',
+  CHECKOUT = 'Checkout',
 }
 
 const advanceStage = async (patient: Patient) => {
