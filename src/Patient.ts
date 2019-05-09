@@ -118,10 +118,10 @@ let patients: Patient[] = [
     insurancePlanId: 'davis-vision-standard',
     stage: PatientStage.SCHEDULED,
     checkInTimeISO: new Date().toISOString(),
-    doctorId: 'test-doctor',
+    doctorId: null,
     stageMoveTimestampsJson: JSON.stringify([]),
     storeId: 'test-store',
-    visualGuideId: 'test-vg',
+    visualGuideId: null,
   },
 ];
 
