@@ -8,6 +8,7 @@ enum PatientStage {
   WAITING = 'Waiting',
   CHOOSING_EXAM_TYPE = 'Choosing Exam Type',
   EYE_CHART = 'Eye Chart',
+  RETINAL_SCAN = 'Retinal Scan',
   EXAM = 'Exam',
   CHOOSING_FRAMES = 'Choosing Frames',
 }
