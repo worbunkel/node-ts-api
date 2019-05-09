@@ -5,6 +5,7 @@ import { readFileSync } from 'fs';
 
 export enum BenefitType {
   EYE_EXAMINATION = 'Eye Examination',
+  OPTOS_EYE_EXAMINATION = 'Optos Eye Examination',
   SPECTACLE_LENSES = 'Spectacle Lenses',
   FRAMES = 'Frames',
   SINGLE_VISION_LENSES = 'Single Vision Lenses',

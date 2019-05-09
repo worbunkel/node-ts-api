@@ -1,5 +1,6 @@
 type,davis-vision-standard copay,davis-vision-standard limit,davis-vision-premium copay,davis-vision-premium limit
 EYE_EXAMINATION,10,null,5,null
+OPTOS_EYE_EXAMINATION,10,null,5,null
 SPECTACLE_LENSES,20,null,0,null
 FRAMES,0,180,0,200
 SINGLE_VISION_LENSES,0,null,0,null
