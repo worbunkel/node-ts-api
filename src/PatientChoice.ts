@@ -19,14 +19,7 @@ export class PatientChoice {
   cost: number;
 }
 
-let patientChoices: PatientChoice[] = [
-  {
-    id: 'test-patient-choice',
-    patientId: 'test-patient',
-    benefitType: BenefitType.STANDARD_EYE_EXAMINATION,
-    cost: 40,
-  },
-];
+let patientChoices: PatientChoice[] = [];
 
 export const getAllPatientChoices = async (): Promise<PatientChoice[]> => patientChoices;
 
