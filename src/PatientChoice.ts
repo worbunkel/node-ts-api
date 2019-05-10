@@ -59,6 +59,10 @@ export class PatientChoiceResolver {
       ...newPatientChoiceData,
       id: uuid(),
     };
+    patientChoices = _.reject(patientChoices, {
+      patientId: newPatientChoice.id,
+      benefitType: newPatientChoice.benefitType,
+    });
     patientChoices.push(newPatientChoice);
 
     return newPatientChoice;
