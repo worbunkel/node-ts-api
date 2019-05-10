@@ -31,7 +31,7 @@ export enum BenefitType {
 }
 
 @ObjectType()
-class Benefit {
+export class Benefit {
   @Field()
   id: string;
 
@@ -78,6 +78,8 @@ const importBenefitsFromCSV = () => {
 };
 
 let benefits: Benefit[] = importBenefitsFromCSV();
+
+export const getAllBenefits = async (): Promise<Benefit[]> => benefits;
 
 export const getAllBenefitsForInsurancePlan = async (insurancePlanId: string): Promise<Benefit[]> =>
   _.filter(benefits, { insurancePlanId });

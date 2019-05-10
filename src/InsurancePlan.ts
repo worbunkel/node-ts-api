@@ -1,6 +1,7 @@
 import { ObjectType, Field, Resolver, Query, InputType, Mutation, Arg } from 'type-graphql';
 import uuid from 'uuid/v4';
 import * as _ from 'lodash';
+import { Benefit, getAllBenefits } from './Benefit';
 
 @ObjectType()
 class InsurancePlan {
@@ -12,6 +13,9 @@ class InsurancePlan {
 
   @Field({ nullable: true })
   deductible?: number;
+
+  @Field(type => [Benefit])
+  benefits: Array<Benefit>;
 }
 
 let insurancePlans: InsurancePlan[] = [
@@ -19,15 +23,21 @@ let insurancePlans: InsurancePlan[] = [
     id: 'davis-vision-standard',
     provider: 'Davis Vision',
     deductible: 0,
+    benefits: [],
   },
   {
     id: 'davis-vision-premium',
     provider: 'Davis Vision',
     deductible: 0,
+    benefits: [],
   },
 ];
 
-export const getAllInsurancePlans = async (): Promise<InsurancePlan[]> => insurancePlans;
+export const getAllInsurancePlans = async (allBenefits: Benefit[]): Promise<InsurancePlan[]> =>
+  _.map(insurancePlans, insurancePlan => ({
+    ...insurancePlan,
+    benefits: _.filter(allBenefits, { insurancePlanId: insurancePlan.id }),
+  }));
 
 @InputType()
 class NewInsurancePlanInput {
@@ -42,7 +52,8 @@ class NewInsurancePlanInput {
 export class InsurancePlanResolver {
   @Query(returns => [InsurancePlan])
   async insurancePlans() {
-    return await getAllInsurancePlans();
+    const allBenefits = await getAllBenefits();
+    return await getAllInsurancePlans(allBenefits);
   }
 
   @Mutation(returns => InsurancePlan)
@@ -52,6 +63,7 @@ export class InsurancePlanResolver {
     const newInsurancePlan = {
       ...newInsurancePlanData,
       id: uuid(),
+      benefits: [],
     };
     insurancePlans.push(newInsurancePlan);
 
