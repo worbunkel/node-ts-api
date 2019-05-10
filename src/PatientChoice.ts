@@ -60,7 +60,7 @@ export class PatientChoiceResolver {
       id: uuid(),
     };
     patientChoices = _.reject(patientChoices, {
-      patientId: newPatientChoice.id,
+      patientId: newPatientChoice.patientId,
       benefitType: newPatientChoice.benefitType,
     });
     patientChoices.push(newPatientChoice);
