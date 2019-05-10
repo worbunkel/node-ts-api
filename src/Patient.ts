@@ -111,10 +111,7 @@ export class Patient {
   stageMoveTimestampsJson: string;
 
   @Field()
-  totalCostBeforeInsurance: number;
-
-  @Field()
-  totalCostAfterInsurance: number;
+  totalCost: number;
 
   @Field(type => [PatientChoice])
   choices: PatientChoice[];
@@ -133,8 +130,7 @@ let patients: Patient[] = [
     stageMoveTimestampsJson: JSON.stringify([]),
     storeId: 'test-store',
     visualGuideId: null,
-    totalCostBeforeInsurance: 0,
-    totalCostAfterInsurance: 0,
+    totalCost: 0,
     choices: [],
   },
 ];
@@ -216,8 +212,7 @@ export class PatientResolver {
       checkInTimeISO: new Date().toISOString(),
       stageMoveTimestampsJson: JSON.stringify([]),
       choices: [],
-      totalCostAfterInsurance: 0,
-      totalCostBeforeInsurance: 0,
+      totalCost: 0,
     };
     patients.push(newPatient);
 

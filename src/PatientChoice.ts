@@ -2,6 +2,7 @@ import { ObjectType, Field, Resolver, Query, InputType, Mutation, Arg } from 'ty
 import uuid from 'uuid/v4';
 import * as _ from 'lodash';
 import { BenefitType } from './Benefit';
+import { updatePatient } from './Patient';
 
 @ObjectType()
 export class PatientChoice {
@@ -72,6 +73,10 @@ export class PatientChoiceResolver {
     });
 
     patientChoices.push(newPatientChoice);
+
+    const newTotalCostForPatient = _.sumBy(await getAllPatientChoicesForPatient(newPatientChoice.patientId), 'cost');
+
+    await updatePatient(newPatientChoice.patientId, { totalCost: newTotalCostForPatient });
 
     return newPatientChoice;
   }
