@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { BenefitType } from './Benefit';
 
 @ObjectType()
-class PatientChoice {
+export class PatientChoice {
   @Field()
   id: string;
 
@@ -26,6 +26,8 @@ let patientChoices: PatientChoice[] = [
     cost: 40,
   },
 ];
+
+export const getAllPatientChoices = async (): Promise<PatientChoice[]> => patientChoices;
 
 export const getAllPatientChoicesForPatient = async (patientId: string): Promise<PatientChoice[]> =>
   _.filter(patientChoices, { patientId });

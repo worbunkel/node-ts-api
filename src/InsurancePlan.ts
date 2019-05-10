@@ -33,11 +33,13 @@ let insurancePlans: InsurancePlan[] = [
   },
 ];
 
-export const getAllInsurancePlans = async (allBenefits: Benefit[]): Promise<InsurancePlan[]> =>
-  _.map(insurancePlans, insurancePlan => ({
+export const getAllInsurancePlans = async (): Promise<InsurancePlan[]> => {
+  const allBenefits = await getAllBenefits();
+  return _.map(insurancePlans, insurancePlan => ({
     ...insurancePlan,
     benefits: _.filter(allBenefits, { insurancePlanId: insurancePlan.id }),
   }));
+};
 
 @InputType()
 class NewInsurancePlanInput {
@@ -52,8 +54,7 @@ class NewInsurancePlanInput {
 export class InsurancePlanResolver {
   @Query(returns => [InsurancePlan])
   async insurancePlans() {
-    const allBenefits = await getAllBenefits();
-    return await getAllInsurancePlans(allBenefits);
+    return await getAllInsurancePlans();
   }
 
   @Mutation(returns => InsurancePlan)

@@ -2,6 +2,7 @@ import { ObjectType, Field, Resolver, Query, InputType, Mutation, Arg } from 'ty
 import uuid from 'uuid/v4';
 import * as _ from 'lodash';
 import { assignAssociateToPatient, AssociateRole, unassignAssociateFromPatient } from './Associate';
+import { PatientChoice, getAllPatientChoices } from './PatientChoice';
 
 enum PatientStage {
   SCHEDULED = 'Scheduled',
@@ -108,6 +109,15 @@ export class Patient {
 
   @Field()
   stageMoveTimestampsJson: string;
+
+  @Field()
+  totalCostBeforeInsurance: number;
+
+  @Field()
+  totalCostAfterInsurance: number;
+
+  @Field(type => [PatientChoice])
+  choices: PatientChoice[];
 }
 
 let patients: Patient[] = [
@@ -123,17 +133,28 @@ let patients: Patient[] = [
     stageMoveTimestampsJson: JSON.stringify([]),
     storeId: 'test-store',
     visualGuideId: null,
+    totalCostBeforeInsurance: 0,
+    totalCostAfterInsurance: 0,
+    choices: [],
   },
 ];
 
-export const getAllPatients = async (): Promise<Patient[]> => patients;
+export const getAllPatients = async (): Promise<Patient[]> => {
+  const allPatientChoices = await getAllPatientChoices();
+  return _.map(patients, patient => ({
+    ...patient,
+    choices: _.filter(allPatientChoices, { patientId: patient.id }),
+  }));
+};
 
-export const getAllPatientsByStore = async (storeId: string): Promise<Patient[]> => _.filter(patients, { storeId });
+export const getAllPatientsByStore = async (storeId: string): Promise<Patient[]> =>
+  _.filter(await getAllPatients(), { storeId });
 
 export const getAllPatientsByVisualGuide = async (visualGuideId: string): Promise<Patient[]> =>
-  _.filter(patients, { visualGuideId });
+  _.filter(await getAllPatients(), { visualGuideId });
 
-export const getAllPatientsByDoctor = async (doctorId: string): Promise<Patient[]> => _.filter(patients, { doctorId });
+export const getAllPatientsByDoctor = async (doctorId: string): Promise<Patient[]> =>
+  _.filter(await getAllPatients(), { doctorId });
 
 export const updatePatient = async (patientId: string, newProperties: Partial<Patient>) => {
   const patient = _.find(patients, { id: patientId });
@@ -194,6 +215,9 @@ export class PatientResolver {
       stage: PatientStage.SCHEDULED,
       checkInTimeISO: new Date().toISOString(),
       stageMoveTimestampsJson: JSON.stringify([]),
+      choices: [],
+      totalCostAfterInsurance: 0,
+      totalCostBeforeInsurance: 0,
     };
     patients.push(newPatient);
 
