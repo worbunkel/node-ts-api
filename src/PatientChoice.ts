@@ -44,6 +44,9 @@ class NewPatientChoiceInput {
   cost: number;
 }
 
+const checkIsExamBenefitType = (benefitType: BenefitType) =>
+  _.includes([BenefitType.OPTOS_EYE_EXAMINATION, BenefitType.STANDARD_EYE_EXAMINATION], benefitType);
+
 @Resolver(PatientChoice)
 export class PatientChoiceResolver {
   @Query(returns => [PatientChoice])
@@ -59,10 +62,15 @@ export class PatientChoiceResolver {
       ...newPatientChoiceData,
       id: uuid(),
     };
-    patientChoices = _.reject(patientChoices, {
-      patientId: newPatientChoice.patientId,
-      benefitType: newPatientChoice.benefitType,
+    patientChoices = _.reject(patientChoices, patientChoice => {
+      const isSamePatient = patientChoice.patientId === newPatientChoice.patientId;
+      const isSameBenefitType = checkIsExamBenefitType(newPatientChoice.benefitType)
+        ? checkIsExamBenefitType(patientChoice.benefitType)
+        : newPatientChoice.benefitType === patientChoice.benefitType;
+
+      return isSamePatient && isSameBenefitType;
     });
+
     patientChoices.push(newPatientChoice);
 
     return newPatientChoice;
