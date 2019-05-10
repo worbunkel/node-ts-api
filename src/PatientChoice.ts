@@ -17,6 +17,9 @@ export class PatientChoice {
 
   @Field()
   cost: number;
+
+  @Field({ nullable: true })
+  options?: string;
 }
 
 let patientChoices: PatientChoice[] = [];
@@ -36,6 +39,9 @@ class NewPatientChoiceInput {
 
   @Field()
   cost: number;
+
+  @Field({ nullable: true })
+  options?: string;
 }
 
 const checkIsExamBenefitType = (benefitType: BenefitType) =>
