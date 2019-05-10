@@ -1,6 +1,6 @@
 import { ObjectType, Field, Resolver, Query, InputType, Mutation, Arg } from 'type-graphql';
 import uuid from 'uuid/v4';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { readFileSync } from 'fs';
 
 export enum BenefitType {

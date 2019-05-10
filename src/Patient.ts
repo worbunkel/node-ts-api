@@ -1,6 +1,6 @@
 import { ObjectType, Field, Resolver, Query, InputType, Mutation, Arg } from 'type-graphql';
 import uuid from 'uuid/v4';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { assignAssociateToPatient, AssociateRole, unassignAssociateFromPatient } from './Associate';
 import { PatientChoice, getAllPatientChoices } from './PatientChoice';
 
