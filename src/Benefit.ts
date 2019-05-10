@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { readFileSync } from 'fs';
 
 export enum BenefitType {
-  EYE_EXAMINATION = 'Eye Examination',
+  STANDARD_EYE_EXAMINATION = 'Standard Eye Examination',
   OPTOS_EYE_EXAMINATION = 'Optos Eye Examination',
   SPECTACLE_LENSES = 'Spectacle Lenses',
   FRAMES = 'Frames',
