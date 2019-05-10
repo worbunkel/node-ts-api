@@ -70,7 +70,6 @@ export class PatientResultResolver {
   @Mutation(returns => Boolean)
   async removePatientResult(@Arg('patientResultId') patientResultId: string) {
     patientResults = _.filter(patientResults, patientResult => patientResult.id !== patientResultId);
-
     return true;
   }
 }
