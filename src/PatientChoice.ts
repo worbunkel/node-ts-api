@@ -16,6 +16,9 @@ export class PatientChoice {
   benefitType: BenefitType;
 
   @Field()
+  costBeforeInsurance: number;
+
+  @Field()
   cost: number;
 
   @Field({ nullable: true })
@@ -36,6 +39,9 @@ class NewPatientChoiceInput {
 
   @Field()
   benefitType: BenefitType;
+
+  @Field()
+  costBeforeInsurance: number;
 
   @Field()
   cost: number;
