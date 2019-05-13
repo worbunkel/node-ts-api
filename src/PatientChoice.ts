@@ -79,9 +79,14 @@ export class PatientChoiceResolver {
 
     patientChoices.push(newPatientChoice);
 
-    const newTotalCostForPatient = _.sumBy(await getAllPatientChoicesForPatient(newPatientChoice.patientId), 'cost');
+    const allPatientChoices = await getAllPatientChoicesForPatient(newPatientChoice.patientId);
+    const newTotalCost = _.sumBy(allPatientChoices, 'cost');
+    const newTotalCostBeforeInsurance = _.sumBy(allPatientChoices, 'costBeforeInsurance');
 
-    await updatePatient(newPatientChoice.patientId, { totalCost: newTotalCostForPatient });
+    await updatePatient(newPatientChoice.patientId, {
+      totalCost: newTotalCost,
+      totalCostBeforeInsurance: newTotalCostBeforeInsurance,
+    });
 
     return newPatientChoice;
   }
