@@ -50,8 +50,23 @@ class NewPatientChoiceInput {
   options?: string;
 }
 
-const checkIsExamBenefitType = (benefitType: BenefitType) =>
-  _.includes([BenefitType.OPTOS_EYE_EXAMINATION, BenefitType.STANDARD_EYE_EXAMINATION], benefitType);
+const sameBenefitTypes = [
+  [BenefitType.OPTOS_EYE_EXAMINATION, BenefitType.STANDARD_EYE_EXAMINATION],
+  [
+    BenefitType.TRIFOCAL_LENSES,
+    BenefitType.LINED_BIFOCAL_LENSES,
+    BenefitType.SINGLE_VISION_LENSES,
+    BenefitType.STANDARD_PROGRESSIVE_LENSES,
+    BenefitType.PREMIUM_PROGRESSIVE_LENSES,
+    BenefitType.ULTRA_PROGRESSIVE_LENSES,
+  ],
+];
+
+const checkIsSameBenefitType = (benefitType: BenefitType, otherBenefitType: BenefitType) =>
+  _.some(
+    sameBenefitTypes,
+    sameBenefitSet => _.includes(sameBenefitSet, benefitType) && _.includes(sameBenefitSet, otherBenefitType),
+  );
 
 @Resolver(PatientChoice)
 export class PatientChoiceResolver {
@@ -70,9 +85,7 @@ export class PatientChoiceResolver {
     };
     patientChoices = _.reject(patientChoices, patientChoice => {
       const isSamePatient = patientChoice.patientId === newPatientChoice.patientId;
-      const isSameBenefitType = checkIsExamBenefitType(newPatientChoice.benefitType)
-        ? checkIsExamBenefitType(patientChoice.benefitType)
-        : newPatientChoice.benefitType === patientChoice.benefitType;
+      const isSameBenefitType = checkIsSameBenefitType(newPatientChoice.benefitType, patientChoice.benefitType);
 
       return isSamePatient && isSameBenefitType;
     });
