@@ -63,7 +63,7 @@ const sameBenefitTypes = [
 ];
 
 const checkIsSameBenefitType = (benefitType: BenefitType, otherBenefitType: BenefitType) =>
-  _.some(
+  benefitType === otherBenefitType || _.some(
     sameBenefitTypes,
     sameBenefitSet => _.includes(sameBenefitSet, benefitType) && _.includes(sameBenefitSet, otherBenefitType),
   );
