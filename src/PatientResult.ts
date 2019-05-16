@@ -27,7 +27,7 @@ let patientResults: PatientResult[] = [
   {
     id: 'test-patient-result',
     patientId: 'test-patient',
-    resultType: ResultType.EYE_CHART,
+    resultType: ResultType.PRESCRIPTION,
     resultJson: '{"Right (OD)":{"SPH":1.0,"CYL":0,"AXIS":0},"Left (OS)":{"SPH":0,"CYL":0,"AXIS":0},"PD":{"SPH":0}}',
   },
 ];
