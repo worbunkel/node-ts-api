@@ -2,14 +2,14 @@ import { ObjectType, Field, Resolver, Query, InputType, Mutation, Arg } from 'ty
 import uuid from 'uuid/v4';
 import _ from 'lodash';
 
-enum ExamType {
+enum ResultType {
   EYE_CHART = 'Eye Chart',
-  EYE_MACHINE = 'Eye Machine',
   EXAM = 'Exam',
+  PRESCRIPTION = 'Prescription',
 }
 
 @ObjectType()
-class PatientResult {
+export class PatientResult {
   @Field()
   id: string;
 
@@ -17,20 +17,22 @@ class PatientResult {
   patientId: string;
 
   @Field()
-  examType: ExamType;
+  resultType: ResultType;
 
   @Field()
-  result: string;
+  resultJson: string;
 }
 
 let patientResults: PatientResult[] = [
   {
     id: 'test-patient-result',
     patientId: 'test-patient',
-    examType: ExamType.EYE_CHART,
-    result: '20/50',
+    resultType: ResultType.EYE_CHART,
+    resultJson: '{"Right (OD)":{"SPH":1.0,"CYL":0,"AXIS":0},"Left (OS)":{"SPH":0,"CYL":0,"AXIS":0},"PD":{"SPH":0}}',
   },
 ];
+
+export const getAllPatientResults = async (): Promise<PatientResult[]> => patientResults;
 
 export const getAllPatientResultsForPatient = async (patientId: string): Promise<PatientResult[]> =>
   _.filter(patientResults, { patientId });
@@ -41,10 +43,10 @@ class NewPatientResultInput {
   patientId: string;
 
   @Field()
-  examType: ExamType;
+  resultType: ResultType;
 
   @Field()
-  result: string;
+  resultJson: string;
 }
 
 @Resolver(PatientResult)

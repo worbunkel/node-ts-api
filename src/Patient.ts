@@ -3,6 +3,7 @@ import uuid from 'uuid/v4';
 import _ from 'lodash';
 import { assignAssociateToPatient, AssociateRole, unassignAssociateFromPatient } from './Associate';
 import { PatientChoice, getAllPatientChoices } from './PatientChoice';
+import { getAllPatientResults, PatientResult } from './PatientResult';
 
 enum PatientStage {
   SCHEDULED = 'Scheduled',
@@ -117,6 +118,9 @@ export class Patient {
 
   @Field(type => [PatientChoice])
   choices: PatientChoice[];
+
+  @Field(type => [PatientResult])
+  results: PatientResult[];
 }
 
 let patients: Patient[] = [
@@ -135,14 +139,17 @@ let patients: Patient[] = [
     totalCostBeforeInsurance: 0,
     totalCost: 0,
     choices: [],
+    results: [],
   },
 ];
 
 export const getAllPatients = async (): Promise<Patient[]> => {
   const allPatientChoices = await getAllPatientChoices();
+  const allPatientResults = await getAllPatientResults();
   return _.map(patients, patient => ({
     ...patient,
     choices: _.filter(allPatientChoices, { patientId: patient.id }),
+    results: _.filter(allPatientResults, { patientId: patient.id }),
   }));
 };
 
@@ -215,6 +222,7 @@ export class PatientResolver {
       checkInTimeISO: new Date().toISOString(),
       stageMoveTimestampsJson: JSON.stringify([]),
       choices: [],
+      results: [],
       totalCostBeforeInsurance: 0,
       totalCost: 0,
     };
