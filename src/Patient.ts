@@ -102,7 +102,7 @@ export class Patient {
   email: string;
 
   @Field()
-  checkInTimeISO: string;
+  appointmentTimeISO: string;
 
   @Field()
   stage: PatientStage;
@@ -131,7 +131,24 @@ let patients: Patient[] = [
     email: 'luke@revunit.com',
     insurancePlanId: 'davis-vision-standard',
     stage: PatientStage.SCHEDULED,
-    checkInTimeISO: new Date().toISOString(),
+    appointmentTimeISO: new Date().toISOString().split('T')[0] + '15:00:00.000Z',
+    doctorId: null,
+    stageMoveTimestampsJson: JSON.stringify([]),
+    storeId: 'test-store',
+    visualGuideId: null,
+    totalCostBeforeInsurance: 0,
+    totalCost: 0,
+    choices: [],
+    results: [],
+  },
+  {
+    id: 'test-patient',
+    firstName: 'Lauren',
+    lastName: 'Salguero',
+    email: 'lauren@revunit.com',
+    insurancePlanId: 'davis-vision-premium',
+    stage: PatientStage.SCHEDULED,
+    appointmentTimeISO: new Date().toISOString().split('T')[0] + '15:30:00.000Z',
     doctorId: null,
     stageMoveTimestampsJson: JSON.stringify([]),
     storeId: 'test-store',
@@ -187,6 +204,9 @@ class NewPatientInput {
 
   @Field()
   storeId: string;
+
+  @Field()
+  appointmentTimeISO: string;
 }
 
 @Resolver(Patient)
@@ -219,7 +239,6 @@ export class PatientResolver {
       ...newPatientData,
       id: newPatientId,
       stage: PatientStage.SCHEDULED,
-      checkInTimeISO: new Date().toISOString(),
       stageMoveTimestampsJson: JSON.stringify([]),
       choices: [],
       results: [],
