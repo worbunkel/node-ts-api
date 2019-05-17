@@ -142,7 +142,7 @@ let patients: Patient[] = [
     results: [],
   },
   {
-    id: 'test-patient',
+    id: 'test-patient-2',
     firstName: 'Lauren',
     lastName: 'Salguero',
     email: 'lauren@revunit.com',
