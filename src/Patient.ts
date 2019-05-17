@@ -255,7 +255,7 @@ export class PatientResolver {
     const patient = _.find(patients, { id: patientId });
     if (patient) {
       const newPatient = await advanceStage(patient);
-      patients = _.compact(_.concat(_.without(patients, patient), newPatient));
+      updatePatient(newPatient.id, newPatient);
       return true;
     }
 
@@ -267,7 +267,7 @@ export class PatientResolver {
     const patient = _.find(patients, { id: patientId });
     if (patient) {
       const newPatient = await revertStage(patient);
-      patients = _.concat(_.without(patients, patient), newPatient);
+      updatePatient(newPatient.id, newPatient);
       return true;
     }
 
