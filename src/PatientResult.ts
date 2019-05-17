@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 enum ResultType {
   EYE_CHART = 'Eye Chart',
+  EYE_PRESSURE = 'Eye Pressure',
   EXAM = 'Exam',
   PRESCRIPTION = 'Prescription',
 }
