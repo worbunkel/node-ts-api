@@ -209,6 +209,48 @@ class NewPatientInput {
   appointmentTimeISO: string;
 }
 
+@InputType()
+class UpdatePatientInput {
+  @Field()
+  id: string;
+
+  @Field({ nullable: true })
+  storeId?: string;
+
+  @Field({ nullable: true })
+  visualGuideId?: string;
+
+  @Field({ nullable: true })
+  doctorId?: string;
+
+  @Field({ nullable: true })
+  insurancePlanId?: string;
+
+  @Field({ nullable: true })
+  firstName?: string;
+
+  @Field({ nullable: true })
+  lastName?: string;
+
+  @Field({ nullable: true })
+  email?: string;
+
+  @Field({ nullable: true })
+  appointmentTimeISO?: string;
+
+  @Field({ nullable: true })
+  stage?: PatientStage;
+
+  @Field({ nullable: true })
+  stageMoveTimestampsJson?: string;
+
+  @Field({ nullable: true })
+  totalCostBeforeInsurance?: number;
+
+  @Field({ nullable: true })
+  totalCost?: number;
+}
+
 @Resolver(Patient)
 export class PatientResolver {
   @Query(returns => [Patient])
@@ -268,6 +310,16 @@ export class PatientResolver {
     if (patient) {
       const newPatient = await revertStage(patient);
       updatePatient(newPatient.id, newPatient);
+      return true;
+    }
+
+    return false;
+  }
+
+  @Mutation(returns => Boolean)
+  async updatePatient(@Arg('updatePatientData') updatePatientData: UpdatePatientInput): Promise<boolean> {
+    if (updatePatientData.id) {
+      await updatePatient(updatePatientData.id, updatePatientData);
       return true;
     }
 
