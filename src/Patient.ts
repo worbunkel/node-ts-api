@@ -11,7 +11,7 @@ enum PatientStage {
   CHOOSING_EXAM_TYPE = 'Choosing Exam Type',
   PRE_TEST = 'Pre-Test',
   EXAM = "Doctor's Exam",
-  CHOOSING_FRAMES = 'Frames, Lenses, and Contacts',
+  FRAMES = 'Frames',
   CHECKOUT = 'Checkout',
 }
 
