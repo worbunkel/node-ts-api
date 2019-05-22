@@ -8,6 +8,7 @@ import { InsurancePlanResolver } from './InsurancePlan';
 import { BenefitResolver } from './Benefit';
 import { PatientChoiceResolver } from './PatientChoice';
 import { PatientResultResolver } from './PatientResult';
+import { FramesResolver } from './Frames';
 
 const app: express.Application = express();
 
@@ -20,6 +21,7 @@ const app: express.Application = express();
       PatientResolver,
       PatientChoiceResolver,
       PatientResultResolver,
+      FramesResolver,
     ],
   });
   app.use(
