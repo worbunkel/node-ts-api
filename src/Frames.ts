@@ -1,6 +1,6 @@
 import { ObjectType, Field, Resolver, Query, InputType, Mutation, Arg } from 'type-graphql';
 import _ from 'lodash';
-import { FrameImageCategory, getFramesByCategories } from './scrape';
+import { getFramesByCategories } from './scrape';
 
 @ObjectType()
 class Images {
@@ -153,7 +153,7 @@ class FramesInputType {
 @Resolver(Frames)
 export class FramesResolver {
   @Query(returns => [Frames])
-  async Frames(@Arg('framesInputData') framesInputData: FramesInputType) {
+  async frames(@Arg('framesInputData') framesInputData: FramesInputType) {
     const categories = JSON.parse(framesInputData.categoriesJson);
     return await getFramesByCategories(categories);
   }
