@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import { Frames } from './Frames';
 
 const linksData = {
+  Glasses: { name: 'Glasses', nameInUrl: true, code: 'zbq347' },
   'Contact Lens': { name: 'Contact Lens', nameInUrl: false, code: 'zbq37t' },
   'Alberto Romani': { name: 'Alberto Romani', nameInUrl: true, code: 'zbq2vy' },
   'Anne Klein': { name: 'Anne Klein', nameInUrl: true, code: 'zbq2vz' },
@@ -93,7 +94,6 @@ const linksData = {
   Small: { name: 'Small', nameInUrl: false, code: 'zbq33w' },
   Metal: { name: 'Metal', nameInUrl: false, code: 'zbq33e' },
   Plastic: { name: 'Plastic', nameInUrl: false, code: 'zbq33f' },
-  Glasses: { name: 'Glasses', nameInUrl: true, code: 'zbq347' },
   '$0 - $100': { name: '$0 - $100', nameInUrl: false, code: '60' },
   '$100 - $150': { name: '$100 - $150', nameInUrl: false, code: '5z' },
   '$150 - $200': { name: '$150 - $200', nameInUrl: false, code: '5y' },
@@ -105,9 +105,12 @@ const cachedData = {};
 
 export const getFramesByCategories = async (selectedKeys: FrameImageCategory[]) => {
   const keysInUrl = _.map(
-    _.filter(selectedKeys, selectedKey =>
-      _.get(linksData, `[${selectedKey}].nameInUrl`, false),
-    ) as FrameImageCategory[],
+    _.orderBy(
+      _.filter(selectedKeys, selectedKey =>
+        _.get(linksData, `[${selectedKey}].nameInUrl`, false),
+      ) as FrameImageCategory[],
+      key => _.indexOf(_.keys(linksData), key),
+    ),
     _.kebabCase,
   );
   const codesOfSelectedKeys: string[] = _.map(selectedKeys, selectedKey => _.get(linksData, `[${selectedKey}].code`));
@@ -116,6 +119,7 @@ export const getFramesByCategories = async (selectedKeys: FrameImageCategory[]) 
     return cachedData[endOfUrl];
   }
   try {
+    console.log(endOfUrl);
     const result = await fetch(`https://www.visionworks.com/${endOfUrl}`, { method: 'GET' });
     const text = await result.text();
     const resultingStrings = text.match(/data-sku=[^>]+/g);
