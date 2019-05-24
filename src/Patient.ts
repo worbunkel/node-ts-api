@@ -7,8 +7,7 @@ import { getAllPatientResults, PatientResult } from './PatientResult';
 
 enum PatientStage {
   SCHEDULED = 'Scheduled',
-  WAITING = 'Waiting',
-  PROFILE_COMPLETION = 'Profile Completion',
+  PROFILE_COMPLETION = 'Intake',
   PRE_TEST = 'Pre-Test',
   EXAM = "Doctor's Exam",
   FRAMES = 'Frames',
@@ -57,7 +56,7 @@ const revertStage = async (patient: Patient) => {
   const stageIndex = _.findIndex(stages, stage => _.isEqual(PatientStage[stage], patient.stage));
   if (stageIndex > 0) {
     const oldStage = PatientStage[stages[stageIndex]];
-    if (oldStage === PatientStage.WAITING) {
+    if (oldStage === PatientStage.PROFILE_COMPLETION) {
       unassignAssociateFromPatient(patient, patient.doctorId);
       unassignAssociateFromPatient(patient, patient.visualGuideId);
       updatedPatient.doctorId = null;
