@@ -8,6 +8,7 @@ import { getAllPatientResults, PatientResult } from './PatientResult';
 enum PatientStage {
   SCHEDULED = 'Scheduled',
   WAITING = 'Waiting',
+  PROFILE_COMPLETION = 'Profile Completion',
   PRE_TEST = 'Pre-Test',
   EXAM = "Doctor's Exam",
   FRAMES = 'Frames',
