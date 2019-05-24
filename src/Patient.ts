@@ -188,6 +188,10 @@ export const updatePatient = async (patientId: string, newProperties: Partial<Pa
   }
 };
 
+export const deletePatient = async (patientId: string) => {
+  patients = _.reject(patients, { id: patientId });
+};
+
 @InputType()
 class NewPatientInput {
   @Field()
@@ -297,7 +301,11 @@ export class PatientResolver {
     const patient = _.find(patients, { id: patientId });
     if (patient) {
       const newPatient = await advanceStage(patient);
-      updatePatient(newPatient.id, newPatient);
+      if (newPatient) {
+        updatePatient(patient.id, newPatient);
+      } else {
+        deletePatient(patient.id);
+      }
       return true;
     }
 
