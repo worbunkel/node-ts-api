@@ -5,7 +5,7 @@ import { assignAssociateToPatient, AssociateRole, unassignAssociateFromPatient }
 import { PatientChoice, getAllPatientChoices } from './PatientChoice';
 import { getAllPatientResults, PatientResult } from './PatientResult';
 
-enum PatientStage {
+export enum PatientStage {
   SCHEDULED = 'Scheduled',
   PROFILE_COMPLETION = 'Intake',
   PRE_TEST = 'Pre-Test',

@@ -1,7 +1,14 @@
 import { ObjectType, Field, Resolver, Query, InputType, Mutation, Arg } from 'type-graphql';
 import uuid from 'uuid/v4';
 import _ from 'lodash';
-import { Patient, updatePatient } from './Patient';
+import {
+  Patient,
+  updatePatient,
+  getAllPatientsByVisualGuide,
+  PatientStage,
+  getAllPatientsByDoctor,
+  getAllPatientsByStore,
+} from './Patient';
 
 export enum AssociateRole {
   DOCTOR = 'Doctor',
@@ -140,6 +147,15 @@ export class AssociateResolver {
         patientsJson: JSON.stringify([]),
       };
       associates.push(newAssociate);
+      const allPatientsForStore = await getAllPatientsByStore(newAssociate.storeId);
+      const allCheckedInPatients = _.reject(allPatientsForStore, { stage: PatientStage.SCHEDULED });
+      if (newAssociate.role === AssociateRole.VISUAL_GUIDE) {
+        const checkedInPatientsWithoutVG = _.filter(allCheckedInPatients, { visualGuideId: null });
+        _.each(checkedInPatientsWithoutVG, patient => updatePatient(patient.id, { visualGuideId: newAssociate.id }));
+      } else if (newAssociate.role === AssociateRole.DOCTOR) {
+        const checkedInPatientsWithoutDoctor = _.filter(allCheckedInPatients, { doctorId: null });
+        _.each(checkedInPatientsWithoutDoctor, patient => updatePatient(patient.id, { doctorId: newAssociate.id }));
+      }
 
       return newAssociate;
     }
