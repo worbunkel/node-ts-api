@@ -12,7 +12,7 @@ import {
 
 export enum AssociateRole {
   DOCTOR = 'Doctor',
-  VISUAL_GUIDE = 'Visual Guide',
+  VISUAL_GUIDE = 'Visionary Guide',
   CHIEF_EXPERIENCE_OFFICER = 'Chief Experience Officer',
   SEE_GREAT_CAPTAIN = 'See Great Captain',
 }
