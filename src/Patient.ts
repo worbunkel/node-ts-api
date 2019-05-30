@@ -157,6 +157,23 @@ let patients: Patient[] = [
     choices: [],
     results: [],
   },
+  {
+    id: 'test-patient-3',
+    firstName: 'Don',
+    lastName: 'Jones',
+    email: 'djones@test.com',
+    insurancePlanId: 'davis-vision-premium',
+    stage: PatientStage.SCHEDULED,
+    appointmentTimeISO: new Date().toISOString().split('T')[0] + 'T16:45:00.000Z',
+    doctorId: null,
+    stageMoveTimestampsJson: JSON.stringify([]),
+    storeId: 'test-store',
+    visualGuideId: null,
+    totalCostBeforeInsurance: 0,
+    totalCost: 0,
+    choices: [],
+    results: [],
+  },
 ];
 
 export const getAllPatients = async (): Promise<Patient[]> => {
