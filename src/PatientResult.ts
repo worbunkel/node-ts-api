@@ -29,7 +29,22 @@ let patientResults: PatientResult[] = [
     id: 'test-patient-result',
     patientId: 'test-patient',
     resultType: ResultType.PRESCRIPTION,
-    resultJson: '{"Right (OD)":{"SPH":1.0,"CYL":0,"AXIS":0},"Left (OS)":{"SPH":0,"CYL":0,"AXIS":0},"PD":{"SPH":0}}',
+    resultJson:
+      '{"Right (OD)":{"SPH":1.0,"CYL":1.0,"AXIS":1.0},"Left (OS)":{"SPH":1.0,"CYL":1.0,"AXIS":1.0},"PD":{"SPH":1.0}}',
+  },
+  {
+    id: 'test-patient-result-2',
+    patientId: 'test-patient-2',
+    resultType: ResultType.PRESCRIPTION,
+    resultJson:
+      '{"Right (OD)":{"SPH":1.0,"CYL":1.0,"AXIS":1.0},"Left (OS)":{"SPH":1.0,"CYL":1.0,"AXIS":1.0},"PD":{"SPH":1.0}}',
+  },
+  {
+    id: 'test-patient-result-3',
+    patientId: 'test-patient-3',
+    resultType: ResultType.PRESCRIPTION,
+    resultJson:
+      '{"Right (OD)":{"SPH":1.0,"CYL":1.0,"AXIS":1.0},"Left (OS)":{"SPH":1.0,"CYL":1.0,"AXIS":1.0},"PD":{"SPH":1.0}}',
   },
 ];
 
