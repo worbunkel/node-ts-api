@@ -10,6 +10,7 @@ export enum PatientStage {
   PROFILE_COMPLETION = 'Intake',
   PRE_TEST = 'Pre-Test',
   EXAM = "Doctor's Exam",
+  LENSES = 'Lenses',
   FRAMES = 'Frames',
   CHECKOUT = 'Checkout',
 }
