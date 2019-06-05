@@ -8,6 +8,7 @@ export enum BenefitType {
   OPTOS_EYE_EXAMINATION = 'Optos Eye Examination',
   SPECTACLE_LENSES = 'Spectacle Lenses',
   FRAMES = 'Frames',
+  LENS_PACKAGE = 'Lens Package',
   DELIVERY = 'Delivery',
   SMART_SCREEN_LENSES = 'Smart Screen Lenses',
   SINGLE_VISION_LENSES = 'Single Vision Lenses',
