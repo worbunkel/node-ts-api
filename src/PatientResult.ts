@@ -46,6 +46,24 @@ let patientResults: PatientResult[] = [
     resultJson:
       '{"Right (OD)":{"SPH":1.0,"CYL":1.0,"AXIS":1.0},"Left (OS)":{"SPH":1.0,"CYL":1.0,"AXIS":1.0},"PD":{"SPH":1.0}}',
   },
+  {
+    id: 'test-patient-result',
+    patientId: 'test-patient',
+    resultType: ResultType.EYE_PRESSURE,
+    resultJson: '{"Right (OD)":"12","Left (OS)":"12"}',
+  },
+  {
+    id: 'test-patient-result-2',
+    patientId: 'test-patient-2',
+    resultType: ResultType.EYE_PRESSURE,
+    resultJson: '{"Right (OD)":"12","Left (OS)":"12"}',
+  },
+  {
+    id: 'test-patient-result-3',
+    patientId: 'test-patient-3',
+    resultType: ResultType.EYE_PRESSURE,
+    resultJson: '{"Right (OD)":"12","Left (OS)":"12"}',
+  },
 ];
 
 export const getAllPatientResults = async (): Promise<PatientResult[]> => patientResults;
