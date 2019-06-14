@@ -7,7 +7,7 @@ import { getAllPatientResults, PatientResult } from './PatientResult';
 
 export enum PatientStage {
   SCHEDULED = 'Scheduled',
-  PROFILE_COMPLETION = 'Intake',
+  PROFILE_COMPLETION = 'Patient Profile',
   PRE_TEST = 'Pre-Test',
   EXAM = "Doctor's Exam",
   LENSES = 'Lenses',
