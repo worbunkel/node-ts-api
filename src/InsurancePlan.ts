@@ -11,6 +11,9 @@ class InsurancePlan {
   @Field()
   provider: string;
 
+  @Field()
+  planName: string;
+
   @Field({ nullable: true })
   deductible?: number;
 
@@ -24,12 +27,14 @@ let insurancePlans: InsurancePlan[] = [
     provider: 'Davis Vision',
     deductible: 0,
     benefits: [],
+    planName: 'Davis Vision Standard',
   },
   {
     id: 'davis-vision-premium',
     provider: 'Davis Vision',
     deductible: 0,
     benefits: [],
+    planName: 'Davis Vision Premium',
   },
 ];
 
@@ -45,6 +50,9 @@ export const getAllInsurancePlans = async (): Promise<InsurancePlan[]> => {
 class NewInsurancePlanInput {
   @Field()
   provider: string;
+
+  @Field()
+  planName: string;
 
   @Field({ nullable: true })
   deductible?: number;

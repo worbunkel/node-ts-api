@@ -93,6 +93,15 @@ export class Patient {
   insurancePlanId: string;
 
   @Field()
+  insuranceGroupNumber: string;
+
+  @Field()
+  insurancePolicyNumber: string;
+
+  @Field()
+  insuranceRelationshipToPatient: string;
+
+  @Field()
   firstName: string;
 
   @Field()
@@ -156,6 +165,9 @@ let patients: Patient[] = [
     totalCost: 0,
     choices: [],
     results: [],
+    insuranceGroupNumber: '876548392756',
+    insurancePolicyNumber: '7583735',
+    insuranceRelationshipToPatient: 'self',
   },
   {
     id: 'test-patient-2',
@@ -177,6 +189,9 @@ let patients: Patient[] = [
     totalCost: 0,
     choices: [],
     results: [],
+    insuranceGroupNumber: '338562061692',
+    insurancePolicyNumber: '8393209',
+    insuranceRelationshipToPatient: 'self',
   },
   {
     id: 'test-patient-3',
@@ -198,6 +213,9 @@ let patients: Patient[] = [
     totalCost: 0,
     choices: [],
     results: [],
+    insuranceGroupNumber: '773639659026',
+    insurancePolicyNumber: '4234891',
+    insuranceRelationshipToPatient: 'self',
   },
 ];
 
@@ -258,6 +276,15 @@ class NewPatientInput {
 
   @Field()
   insurancePlanId: string;
+
+  @Field()
+  insuranceGroupNumber: string;
+
+  @Field()
+  insurancePolicyNumber: string;
+
+  @Field()
+  insuranceRelationshipToPatient: string;
 
   @Field()
   storeId: string;
