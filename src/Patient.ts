@@ -102,6 +102,18 @@ export class Patient {
   email: string;
 
   @Field()
+  addressLineOne: string;
+
+  @Field()
+  city: string;
+
+  @Field()
+  state: string;
+
+  @Field()
+  zip: string;
+
+  @Field()
   appointmentTimeISO: string;
 
   @Field()
@@ -129,6 +141,10 @@ let patients: Patient[] = [
     firstName: 'Sarah',
     lastName: 'Kirke',
     email: 'skirke@test.com',
+    addressLineOne: '123 Mary Street',
+    city: 'San Antonio',
+    state: 'TX',
+    zip: '78204',
     insurancePlanId: 'davis-vision-standard',
     stage: PatientStage.SCHEDULED,
     appointmentTimeISO: new Date().toISOString().split('T')[0] + 'T14:15:00.000Z',
@@ -146,6 +162,10 @@ let patients: Patient[] = [
     firstName: 'John',
     lastName: 'Jones',
     email: 'jjones@test.com',
+    addressLineOne: '23 Oak Street',
+    city: 'San Antonio',
+    state: 'TX',
+    zip: '78204',
     insurancePlanId: 'davis-vision-premium',
     stage: PatientStage.SCHEDULED,
     appointmentTimeISO: new Date().toISOString().split('T')[0] + 'T15:30:00.000Z',
@@ -163,6 +183,10 @@ let patients: Patient[] = [
     firstName: 'Don',
     lastName: 'Jones',
     email: 'djones@test.com',
+    addressLineOne: '331 Elm Lane',
+    city: 'San Antonio',
+    state: 'TX',
+    zip: '78204',
     insurancePlanId: 'davis-vision-premium',
     stage: PatientStage.SCHEDULED,
     appointmentTimeISO: new Date().toISOString().split('T')[0] + 'T16:45:00.000Z',
@@ -219,6 +243,18 @@ class NewPatientInput {
 
   @Field()
   email: string;
+
+  @Field()
+  addressLineOne: string;
+
+  @Field()
+  city: string;
+
+  @Field()
+  state: string;
+
+  @Field()
+  zip: string;
 
   @Field()
   insurancePlanId: string;
