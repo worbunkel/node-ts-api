@@ -55,6 +55,7 @@ const revertStage = async (patient: Patient) => {
   const updatedPatient = _.cloneDeep(patient);
   const stages = _.keys(PatientStage);
   const stageIndex = _.findIndex(stages, stage => _.isEqual(PatientStage[stage], patient.stage));
+
   if (stageIndex > 0) {
     const oldStage = PatientStage[stages[stageIndex]];
     if (oldStage === PatientStage.PROFILE_COMPLETION) {
