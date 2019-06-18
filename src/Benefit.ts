@@ -6,10 +6,10 @@ import { readFileSync } from 'fs';
 export enum BenefitType {
   STANDARD_EYE_EXAMINATION = 'Standard Eye Examination',
   OPTOS_EYE_EXAMINATION = 'Optos Eye Examination',
-  SPECTACLE_LENSES = 'Spectacle Lenses',
   FRAMES = 'Frames',
   LENS_PACKAGE = 'Lens Package',
   DELIVERY = 'Delivery',
+  SPECTACLE_LENSES = 'Spectacle Lenses',
   SMART_SCREEN_LENSES = 'Smart Screen Lenses',
   SINGLE_VISION_LENSES = 'Single Vision Lenses',
   LINED_BIFOCAL_LENSES = 'Lined Bifocal Lenses',
