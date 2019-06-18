@@ -143,6 +143,9 @@ export class Patient {
 
   @Field(type => [PatientResult])
   results: PatientResult[];
+
+  @Field()
+  currentFramesLensGroupId: string;
 }
 
 let patients: Patient[] = [
@@ -169,6 +172,7 @@ let patients: Patient[] = [
     insuranceGroupNumber: '876548392756',
     insurancePolicyNumber: '7583735',
     insuranceRelationshipToPatient: 'self',
+    currentFramesLensGroupId: '1',
   },
   {
     id: 'test-patient-2',
@@ -193,6 +197,7 @@ let patients: Patient[] = [
     insuranceGroupNumber: '338562061692',
     insurancePolicyNumber: '8393209',
     insuranceRelationshipToPatient: 'self',
+    currentFramesLensGroupId: '1',
   },
   {
     id: 'test-patient-3',
@@ -217,6 +222,7 @@ let patients: Patient[] = [
     insuranceGroupNumber: '773639659026',
     insurancePolicyNumber: '4234891',
     insuranceRelationshipToPatient: 'self',
+    currentFramesLensGroupId: '1',
   },
 ];
 
@@ -334,6 +340,9 @@ class UpdatePatientInput {
 
   @Field({ nullable: true })
   totalCost?: number;
+
+  @Field({ nullable: true })
+  currentFramesLensGroupId?: string;
 }
 
 @Resolver(Patient)
@@ -371,6 +380,7 @@ export class PatientResolver {
       results: [],
       totalCostBeforeInsurance: 0,
       totalCost: 0,
+      currentFramesLensGroupId: '1',
     };
     patients.push(newPatient);
 
