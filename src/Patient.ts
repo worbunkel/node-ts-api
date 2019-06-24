@@ -9,8 +9,8 @@ export enum PatientStage {
   SCHEDULED = 'Scheduled',
   PROFILE_COMPLETION = 'Patient Profile',
   PRE_TEST = 'Pre-Test',
-  EXAM = "Doctor's Exam",
-  LENSES = 'Lenses',
+  EXAM = 'Exam',
+  LENSES = 'Contacts + Lenses',
   FRAMES = 'Frames',
   CHECKOUT = 'Checkout',
 }
