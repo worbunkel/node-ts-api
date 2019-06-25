@@ -98,6 +98,12 @@ export const assignAssociateToPatient = async (patientId: string, associateRole:
   if (associateWithFewestPatients) {
     addPatientToAssociate(associateWithFewestPatients.id, patientId);
     return associateWithFewestPatients.id;
+  } else {
+    if (associateRole === AssociateRole.VISUAL_GUIDE) {
+      updatePatient(patientId, { visualGuideId: null });
+    } else if (associateRole === AssociateRole.DOCTOR) {
+      updatePatient(patientId, { doctorId: null });
+    }
   }
   return null;
 };
