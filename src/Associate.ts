@@ -98,12 +98,6 @@ export const assignAssociateToPatient = async (patientId: string, associateRole:
   if (associateWithFewestPatients) {
     addPatientToAssociate(associateWithFewestPatients.id, patientId);
     return associateWithFewestPatients.id;
-  } else {
-    if (associateRole === AssociateRole.VISUAL_GUIDE) {
-      updatePatient(patientId, { visualGuideId: null });
-    } else if (associateRole === AssociateRole.DOCTOR) {
-      updatePatient(patientId, { doctorId: null });
-    }
   }
   return null;
 };
@@ -157,10 +151,16 @@ export class AssociateResolver {
       const allCheckedInPatients = _.reject(allPatientsForStore, { stage: PatientStage.SCHEDULED });
       if (newAssociate.role === AssociateRole.VISUAL_GUIDE) {
         const checkedInPatientsWithoutVG = _.filter(allCheckedInPatients, { visualGuideId: null });
-        _.each(checkedInPatientsWithoutVG, patient => updatePatient(patient.id, { visualGuideId: newAssociate.id }));
+        _.each(checkedInPatientsWithoutVG, patient => {
+          updatePatient(patient.id, { visualGuideId: newAssociate.id });
+          addPatientToAssociate(newAssociate.id, patient.id);
+        });
       } else if (newAssociate.role === AssociateRole.DOCTOR) {
         const checkedInPatientsWithoutDoctor = _.filter(allCheckedInPatients, { doctorId: null });
-        _.each(checkedInPatientsWithoutDoctor, patient => updatePatient(patient.id, { doctorId: newAssociate.id }));
+        _.each(checkedInPatientsWithoutDoctor, patient => {
+          updatePatient(patient.id, { doctorId: newAssociate.id });
+          addPatientToAssociate(newAssociate.id, patient.id);
+        });
       }
 
       return newAssociate;
@@ -181,6 +181,7 @@ export class AssociateResolver {
         );
         const newIds = await Promise.all(newIdPromises);
         const patientAssociates = _.zip(patientIds, newIds);
+        console.log(patientAssociates);
         const updatedPatientPromises = _.map(patientAssociates, ([patientId, newId]) =>
           updatePatient(
             patientId,
