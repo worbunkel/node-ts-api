@@ -8,11 +8,10 @@ import { getAllPatientResults, PatientResult } from './PatientResult';
 export enum PatientStage {
   SCHEDULED = 'Scheduled',
   PROFILE_COMPLETION = 'Patient Profile',
-  PRE_TEST = 'Pre-Test',
-  EXAM = 'Exam',
+  EXAM_TYPE = 'Exam',
   LENSES = 'Contacts + Lenses',
   FRAMES = 'Frames',
-  CHECKOUT = 'Checkout',
+  DELIVERY = 'Delivery',
 }
 
 const advanceStage = async (patient: Patient) => {
